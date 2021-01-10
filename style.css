@@ -1,0 +1,32 @@
+#grid {
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  height: 800px;
+  background-color: lightskyblue;
+}
+.row {
+  display: flex;
+}
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1px;
+  border: 1px solid black;
+}
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#panel {
+  height: 50%;
+  padding: 2%;
+  margin: 1%;
+  border: 1px solid black;
+}
+.playbackBtn{
+  width: 30px;
+  height: 30px;
+}
