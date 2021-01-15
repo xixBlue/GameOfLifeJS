@@ -1,9 +1,15 @@
+body{
+  background-image: url(img/bg.png);
+  background-size:cover;
+  background-repeat: no-repeat;
+}
 #grid {
   display: flex;
   flex-direction: column;
   width: 800px;
   height: 800px;
-  background-color: lightskyblue;
+  margin: 3%;
+  opacity: .5;
 }
 .row {
   display: flex;
@@ -19,14 +25,32 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+#panelBackground {
+  width:300px;
+  padding: 1%;
+  margin: 1%;
+  border: 6px solid grey;
+  border-radius: 3%;
+  background-color: lightblue;
+  opacity: .5;
+
 }
 #panel {
-  height: 50%;
-  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  padding: 1%;
   margin: 1%;
-  border: 1px solid black;
+  
 }
 .playbackBtn{
   width: 30px;
   height: 30px;
+}
+.slider{
+  width:100%;
 }

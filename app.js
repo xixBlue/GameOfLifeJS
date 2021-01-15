@@ -4,24 +4,72 @@ Any dead cell with three live neighbours becomes a live cell.
 All other live cells die in the next generation. Similarly, all other dead cells stay dead.
 */
 
+// global variables
+let gridSize = 50;
+let gridHTML = document.getElementById('grid');
+
+
 const initiatePanel = grid => {
-  // grab stepForward button
+  // grab playback buttons
   let stepForwardBtn = document.getElementById('stepForwardBtn');
+  let playPauseBtn = document.getElementById('playPauseBtn');
+  let refreshBtn = document.getElementById('refreshBtn');
+  let gridSizeSlider = document.getElementById('gridSizeSlider');
+  let playbackSpeedSlider = document.getElementById('playbackSpeedSlider');
+  
+  // we have to initialize setInterval as a numeric value to stop from automatically running
+  let playIntervalId = 0; 
+  // A simple counter to toggle play and pause
+  let playCount = 2;
+
+  // change gridsize when the slider moves
+  gridSizeSlider.onchange = function(){
+    gridSize = gridSizeSlider.value;
+    clearGrid(grid);
+  }
 
   // call stepForward with button
   stepForwardBtn.addEventListener("click", function(){
-    grid = stepForward(grid);
+    grid = stepForwardGrid(grid);
     displayStepForward(grid);
   })
+
+  // playPauseBtn is setup with a setInterval function to simulate playback 
+  playPauseBtn.addEventListener("click", function(){
+    if (playCount % 2 === 0){
+      playPauseBtn.src = 'img/pause.png';
+      playCount++;
+      playIntervalId = setInterval(function(){
+        grid = stepForwardGrid(grid);
+        displayStepForward(grid);
+      }, playbackSpeedSlider.value)
+    } else {
+      playPauseBtn.src = 'img/play.png';
+      playCount++;
+      clearInterval(playIntervalId);
+    }
+  })
+
+  // refreshBtn just clears the grid
+  refreshBtn.addEventListener("click", function(){
+      grid = clearGrid(grid);
+    })
+  
 }
 
+// simple function to clear the grid and recreate it
+const clearGrid = (grid) => {
+  gridHTML.innerHTML = "";
+  grid = [];
+  grid = createGrid();
+
+  return grid;
+}
 
 // Create the grid
 function createGrid() {
-  let gridHTML = document.getElementById('grid');
-
+  
   let grid = [];
-  let gridSize = 80;
 
   for (let i = 0; i < gridSize; i++) {
     let rowHTML = document.createElement('div'); // create row
@@ -35,7 +83,7 @@ function createGrid() {
       cellHTML.className = 'cell'; // add cell class to cell
       cellHTML.id = 'r' + i + 'c' + j; // add id to cell
       cellHTML.style.width = 800 / gridSize + 'px'; // set cell width
-      cellHTML.style.height = (800 - 4 * gridSize) / gridSize + 'px'; // set cell height
+      cellHTML.style.height = (800 - 4.2 * gridSize) / gridSize + 'px'; // set cell height
       cellHTML.style.backgroundColor = 'lightgrey';
       rowHTML.appendChild(cellHTML); // add cell to row
 
@@ -59,7 +107,7 @@ function createGrid() {
 }
 
 
-const stepForward = grid => { 
+const stepForwardGrid = grid => { 
   
   let gridSteppedForward = []; // define a next-iteration grid to push to
   
@@ -106,7 +154,15 @@ const stepForward = grid => {
 const displayStepForward = grid => {
   for (let i = 0; i < grid.length; i++){
     for (let j = 0; j < grid[i].length; j++){
+      // get a cell from the id created in createGrid
       let workingCell = document.getElementById('r' + i + 'c' + j);
+      
+      // add eventlistener just in case user clicks after stepping forward
+      workingCell.addEventListener("click", function(){
+        grid[i][j] === 0 ? grid[i][j] = 1 : grid[i][j] = 0;
+      });
+      
+      // display the current grid after step forward
       grid[i][j] === 0 ? 
         workingCell.style.backgroundColor = 'lightgrey' : 
         workingCell.style.backgroundColor = 'grey';
@@ -114,5 +170,6 @@ const displayStepForward = grid => {
   }
 }
 
+// start the app
 grid = createGrid();
 initiatePanel(grid);
