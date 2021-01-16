@@ -5,7 +5,7 @@ All other live cells die in the next generation. Similarly, all other dead cells
 */
 
 // global variables
-let gridSize = 50;
+let gridSize;
 let gridHTML = document.getElementById('grid');
 
 
@@ -24,8 +24,8 @@ const initiatePanel = grid => {
 
   // change gridsize when the slider moves
   gridSizeSlider.onchange = function(){
-    gridSize = gridSizeSlider.value;
-    clearGrid(grid);
+    gridSize = +gridSizeSlider.value;
+    grid = clearGrid(grid, gridSize);
   }
 
   // call stepForward with button
@@ -52,25 +52,23 @@ const initiatePanel = grid => {
 
   // refreshBtn just clears the grid
   refreshBtn.addEventListener("click", function(){
-      grid = clearGrid(grid);
-    })
-  
+    const gridSize = +document.getElementById('gridSizeSlider').value;
+    grid = clearGrid(grid, gridSize);
+  });
 }
 
 // simple function to clear the grid and recreate it
-const clearGrid = (grid) => {
+const clearGrid = (grid, gridSize) => {
   gridHTML.innerHTML = "";
-  grid = [];
-  grid = createGrid();
-
+  grid = createGrid(gridSize);
+  debugger;
   return grid;
 }
 
 // Create the grid
-function createGrid() {
+function createGrid(gridSize = 50) {
   
   let grid = [];
-
   for (let i = 0; i < gridSize; i++) {
     let rowHTML = document.createElement('div'); // create row
     rowHTML.className = 'row'; // add row class to row
@@ -89,11 +87,11 @@ function createGrid() {
 
       grid[i].push(0); // Create a full grid
 
-
       // add click listener to change from populated/unpopulated
       cellHTML.addEventListener("click", function () {
         if (grid[i][j] === 0) {
           grid[i][j] = 1;
+          console.log(grid);
           cellHTML.style.backgroundColor = 'grey';
         } else {
           grid[i][j] = 0;
@@ -113,7 +111,7 @@ const stepForwardGrid = grid => {
   
   for (let i = 0; i < grid.length; i++){ // step into the grid
     
-    gridSteppedForward[i]=[]; // create an array to push to within the next iteration grid
+    gridSteppedForward[i] = []; // create an array to push to within the next iteration grid
     
     for (let j = 0; j < grid[i].length; j++){
       let liveNeighbors = 0; // define live cell number
